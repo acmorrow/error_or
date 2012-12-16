@@ -234,8 +234,8 @@ namespace acm {
         typename std::conditional
         <
             !std::is_nothrow_constructible<value_type, typename std::add_rvalue_reference<U>::type>::value and std::is_constructible<U, typename std::add_lvalue_reference<U>::type>::value,
-            const T&,
-            T&&
+            const U&,
+            U&&
             >::type
         move_if_noexcept_from(U& u) {
             return std::move(u);
