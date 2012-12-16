@@ -85,7 +85,7 @@ namespace acm {
 
         inline error_or(error_or&& other) noexcept((std::is_nothrow_move_constructible<error_type>::value or
                                                     std::is_nothrow_copy_constructible<error_type>::value) and
-                                                   (std::is_nothrow_copy_constructible<value_type>::value or
+                                                   (std::is_nothrow_move_constructible<value_type>::value or
                                                     std::is_nothrow_copy_constructible<value_type>::value)) {
             if (other.ok_)
                 new(&val_.value) value_type(std::move_if_noexcept(other.val_.value));
