@@ -217,13 +217,13 @@ namespace acm {
             } else {
                 if (ok_) {
                     new(&val_.error) error_type(std::move(other.val_.error));
-                    new(&other.val_.value) T(std::move(val_.value));
-                    val_.value.~T();
+                    new(&other.val_.value) value_type(std::move(val_.value));
+                    val_.value.~value_type();
                     other.val_.error.~error_type();
                 } else {
                     new(&other.val_.error) error_type(std::move(val_.error));
-                    new(&val_.value) T(std::move(other.val_.value));
-                    other.val_.value.~T();
+                    new(&val_.value) value_type(std::move(other.val_.value));
+                    other.val_.value.~value_type();
                     val_.error.~error_type();
                 }
                 swap(ok_, other.ok_);
@@ -233,7 +233,7 @@ namespace acm {
         template<typename U>
         typename std::conditional
         <
-            !std::is_nothrow_constructible<T, typename std::add_rvalue_reference<U>::type>::value and std::is_constructible<U, typename std::add_lvalue_reference<U>::type>::value,
+            !std::is_nothrow_constructible<value_type, typename std::add_rvalue_reference<U>::type>::value and std::is_constructible<U, typename std::add_lvalue_reference<U>::type>::value,
             const T&,
             T&&
             >::type
