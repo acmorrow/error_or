@@ -43,7 +43,7 @@ namespace acm {
     } // namespace detail
 
     template<typename E, typename T>
-    class error_or {
+    class error_or final {
 
     public:
         using error_type = E;
