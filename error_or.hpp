@@ -68,12 +68,6 @@ namespace acm {
             new(&val_.value) value_type(values);
         }
 
-        // template<typename... Args>
-        // inline error_or(Args&&... args) noexcept(std::is_nothrow_constructible<value_type, Args...>::value)
-        // {
-        //     new(&val_.value) value_type(std::forward<Args>(args)...);
-        // }
-
         inline error_or(const error_or& other) noexcept(std::is_nothrow_copy_constructible<error_type>::value and
                                                         std::is_nothrow_copy_constructible<value_type>::value) {
             if (other.ok_)
