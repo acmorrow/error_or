@@ -68,7 +68,7 @@ namespace acm {
             new(&val_.value) value_type(values);
         }
 
-        inline error_or(const error_or& other) noexcept(std::is_nothrow_copy_constructible<error_type>::value and
+        inline error_or(error_or const& other) noexcept(std::is_nothrow_copy_constructible<error_type>::value and
                                                         std::is_nothrow_copy_constructible<value_type>::value) {
             if (other.ok_)
                 new(&val_.value) value_type(other.val_.value);
@@ -89,7 +89,7 @@ namespace acm {
         }
 
         template<typename U>
-        inline error_or(const error_or<error_type, U>& other) noexcept(std::is_nothrow_copy_constructible<error_type>::value and
+        inline error_or(error_or<error_type, U> const& other) noexcept(std::is_nothrow_copy_constructible<error_type>::value and
                                                                        std::is_nothrow_copy_constructible<value_type>::value) {
             if (other.ok_)
                 new(&val_.value) value_type(other.val_.value);
@@ -155,7 +155,7 @@ namespace acm {
             return ok_;
         }
 
-        inline const error_type& error() const noexcept {
+        inline error_type const& error() const noexcept {
             assert(!ok_);
             return val_.error;
         }
@@ -165,7 +165,7 @@ namespace acm {
             return val_.value;
         }
 
-        inline const value_type& value() const noexcept {
+        inline value_type const& value() const noexcept {
             assert(ok_);
             return val_.value;
         }
@@ -191,7 +191,7 @@ namespace acm {
 
         bool ok_ = true;
 
-        static constexpr bool is_nothrow_swappable =
+        static bool constexpr is_nothrow_swappable =
             detail::is_nothrow_swappable<error_type>::value and
             detail::is_nothrow_swappable<value_type>::value and
             std::is_nothrow_move_constructible<error_type>::value and
@@ -228,7 +228,7 @@ namespace acm {
         typename std::conditional
         <
             !std::is_nothrow_constructible<value_type, typename std::add_rvalue_reference<U>::type>::value and std::is_constructible<U, typename std::add_lvalue_reference<U>::type>::value,
-            const U&,
+            U const&,
             U&&
             >::type
         move_if_noexcept_from(U& u) {
@@ -238,7 +238,7 @@ namespace acm {
     };
 
     template<typename E1, typename T1, typename E2, typename T2>
-    bool operator==(const error_or<E1, T1>& lhs, const error_or<E2, T2>& rhs) noexcept(noexcept(lhs.value() == rhs.value()) and
+    bool operator==(error_or<E1, T1> const& lhs, error_or<E2, T2> const& rhs) noexcept(noexcept(lhs.value() == rhs.value()) and
                                                                                        noexcept(lhs.error() == rhs.error())) {
         if (lhs.ok() == rhs.ok()) {
             if (lhs.ok()) {
@@ -251,7 +251,7 @@ namespace acm {
     }
 
     template<typename E1, typename T1, typename E2, typename T2>
-    bool operator!=(const error_or<E1, T1>& lhs, const error_or<E2, T2>& rhs) noexcept(noexcept(lhs == rhs)) {
+    bool operator!=(error_or<E1, T1> const& lhs, error_or<E2, T2> const& rhs) noexcept(noexcept(lhs == rhs)) {
         return not lhs == rhs;
     }
 
