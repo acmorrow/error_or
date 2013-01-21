@@ -21,26 +21,9 @@
 #include <system_error>
 #include <type_traits>
 
+#include "detail/is_nothrow_swappable.hpp"
+
 namespace acm {
-
-    namespace detail  {
-
-        namespace adl_swap_ns {
-            using std::swap;
-
-            template <class T>
-            struct is_nothrow_swappable_test {
-                static bool constexpr value = noexcept(swap(std::declval<T&>(), std::declval<T&>()));
-            };
-        } // namespace adl_swap_ns
-
-        // This really should be part of C++
-        template <class T>
-        struct is_nothrow_swappable
-            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<T>::value>
-        {};
-
-    } // namespace detail
 
     template<typename E, typename T>
     class error_or final {
