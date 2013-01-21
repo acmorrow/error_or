@@ -32,6 +32,16 @@ namespace acm {
         using error_type = E;
         using value_type = T;
 
+    private:
+        static bool constexpr is_nothrow_swappable =
+            detail::is_nothrow_swappable<error_type>::value and
+            detail::is_nothrow_swappable<value_type>::value and
+            std::is_nothrow_move_constructible<error_type>::value and
+            std::is_nothrow_move_constructible<value_type>::value and
+            std::is_nothrow_destructible<error_type>::value and
+            std::is_nothrow_destructible<value_type>::value;
+
+    public:
         inline error_or() noexcept(std::is_nothrow_default_constructible<value_type>::value) {
             new(&val_.value) value_type;
         }
@@ -93,11 +103,11 @@ namespace acm {
             ok_ = other.ok_;
         }
 
-        void swap(error_or& other) noexcept {
+        void swap(error_or& other) noexcept(is_nothrow_swappable) {
             other.sfinae_swap(*this);
         }
 
-        friend inline void swap(error_or& a, error_or& b) noexcept {
+        friend inline void swap(error_or& a, error_or& b) noexcept(is_nothrow_swappable) {
             a.swap(b);
         }
 
@@ -173,14 +183,6 @@ namespace acm {
         } val_;
 
         bool ok_ = true;
-
-        static bool constexpr is_nothrow_swappable =
-            detail::is_nothrow_swappable<error_type>::value and
-            detail::is_nothrow_swappable<value_type>::value and
-            std::is_nothrow_move_constructible<error_type>::value and
-            std::is_nothrow_move_constructible<value_type>::value and
-            std::is_nothrow_destructible<error_type>::value and
-            std::is_nothrow_destructible<value_type>::value;
 
         template<typename U = value_type>
         typename std::enable_if<error_or<error_type, U>::is_nothrow_swappable>::type sfinae_swap(error_or& other) noexcept {
