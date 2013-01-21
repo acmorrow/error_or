@@ -24,16 +24,39 @@ namespace acm {
         namespace adl_swap_ns {
             using std::swap;
 
-            template <class T>
-            struct is_nothrow_swappable_test {
-                static bool constexpr value = noexcept(swap(std::declval<T&>(), std::declval<T&>()));
+            template<typename T>
+            struct is_swappable_test {
+
+                template<typename U>
+                static decltype(swap(std::declval<U&>(), std::declval<U&>())) test(const U&);
+
+                template<typename U>
+                static bool test(...);
+
+                using test_type = decltype(test<T>(std::declval<T&>()));
+                static constexpr bool value = std::is_void<test_type>::value;
             };
+
+            template<bool, typename T>
+            struct is_nothrow_swappable_test :
+                std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))> {
+            };
+
+            template<typename T>
+            struct is_nothrow_swappable_test<false, T> :
+                std::false_type {
+            };
+
         } // namespace adl_swap_ns
 
+        template<typename T>
+        struct is_swappable :
+            std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {};
+
         // This really should be part of C++
-        template <class T>
+        template<typename T>
         struct is_nothrow_swappable
-            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<T>::value>
+            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value>
         {};
 
     } // namespace detail
