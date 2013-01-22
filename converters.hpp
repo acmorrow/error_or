@@ -34,7 +34,7 @@ namespace acm {
     }
 
     template<typename T, typename ...Args>
-    auto throw2return(std::function<T(Args...)> const& may_throw_system_error) -> std::function<error_code_or<T>(Args...)> {
+    auto throw2return(std::function<T(Args...)> may_throw_system_error) -> std::function<error_code_or<T>(Args...)> {
         return [may_throw_system_error](Args&&... args) -> error_code_or<T> {
             try {
                 return may_throw_system_error(std::forward<Args>(args)...);
@@ -55,7 +55,7 @@ namespace acm {
     }
 
     template<typename T, typename ...Args>
-    auto return2throw(std::function<error_code_or<T>(Args...)> const& returns_error_code_or) -> std::function<T(Args...)> {
+    auto return2throw(std::function<error_code_or<T>(Args...)> returns_error_code_or) -> std::function<T(Args...)> {
         return [returns_error_code_or](Args&&... args) -> T {
             error_code_or<T> result = returns_error_code_or(std::forward<Args>(args)...);
             if (!result)
