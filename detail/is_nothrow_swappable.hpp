@@ -30,10 +30,10 @@ namespace acm {
                 struct swap_not_found_type {};
 
                 template<typename U>
-                static decltype(swap(std::declval<U&>(), std::declval<U&>())) test(const U&);
+                static auto test(U& u) -> decltype(swap(u, u));
 
                 template<typename U>
-                static swap_not_found_type test(...);
+                static auto test(...) -> swap_not_found_type;
 
                 using test_type = decltype(test<T>(std::declval<T&>()));
 
@@ -55,13 +55,14 @@ namespace acm {
 
         template<typename T>
         struct is_swappable :
-            std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {};
+            std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {
+        };
 
         // This really should be part of C++
         template<typename T>
         struct is_nothrow_swappable
-            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value>
-        {};
+            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value> {
+        };
 
     } // namespace detail
 } // namespace acm
