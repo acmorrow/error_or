@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef included_108FBB04_F426_414D_9EDD_B4D2AF941E96
-#define included_108FBB04_F426_414D_9EDD_B4D2AF941E96
+#ifndef included_108fbb04_f426_414d_9edd_b4d2af941e96
+#define included_108fbb04_f426_414d_9edd_b4d2af941e96
 
 #include <cassert>
 #include <initializer_list>
@@ -254,4 +254,4 @@ namespace acm {
 
 } // namespace acm
 
-#endif // included_108FBB04_F426_414D_9EDD_B4D2AF941E96
+#endif // included_108fbb04_f426_414d_9edd_b4d2af941e96

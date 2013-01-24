@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef included_1194BA38_E51A_4C64_B628_3F907E697307
-#define included_1194BA38_E51A_4C64_B628_3F907E697307
+#ifndef included_1194ba38_e51a_4c64_b628_3f907e697307
+#define included_1194ba38_e51a_4c64_b628_3f907e697307
 
 #include <memory>
 #include <cstdio>
@@ -160,4 +160,4 @@ namespace acm {
 
 } // namespace acm
 
-#endif // included_1194BA38_E51A_4C64_B628_3F907E697307
+#endif // included_1194ba38_e51a_4c64_b628_3f907e697307
