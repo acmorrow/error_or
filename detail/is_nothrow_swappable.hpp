@@ -25,16 +25,20 @@ namespace acm {
             using std::swap;
 
             template<typename T>
-            struct is_swappable_test {
+            class is_swappable_test {
+
+                struct swap_not_found_type {};
 
                 template<typename U>
                 static decltype(swap(std::declval<U&>(), std::declval<U&>())) test(const U&);
 
                 template<typename U>
-                static bool test(...);
+                static swap_not_found_type test(...);
 
                 using test_type = decltype(test<T>(std::declval<T&>()));
-                static constexpr bool value = std::is_void<test_type>::value;
+
+            public:
+                static constexpr bool value = !std::is_same<test_type, swap_not_found_type>::value;
             };
 
             template<bool, typename T>
