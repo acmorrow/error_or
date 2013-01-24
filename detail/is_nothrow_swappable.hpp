@@ -19,52 +19,52 @@
 #include <utility>
 
 namespace acm {
-    namespace detail  {
+namespace detail  {
 
-        namespace adl_swap_ns {
-            using std::swap;
-
-            template<typename T>
-            class is_swappable_test {
-
-                struct swap_not_found_type {};
-
-                template<typename U>
-                static auto test(U& u) -> decltype(swap(u, u));
-
-                template<typename U>
-                static auto test(...) -> swap_not_found_type;
-
-                using test_type = decltype(test<T>(std::declval<T&>()));
-
-            public:
-                static constexpr bool value = !std::is_same<test_type, swap_not_found_type>::value;
-            };
-
-            template<bool, typename T>
-            struct is_nothrow_swappable_test :
-                std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))> {
-            };
-
-            template<typename T>
-            struct is_nothrow_swappable_test<false, T> :
-                std::false_type {
-            };
-
-        } // namespace adl_swap_ns
+    namespace adl_swap_ns {
+        using std::swap;
 
         template<typename T>
-        struct is_swappable :
-            std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {
+        class is_swappable_test {
+
+            struct swap_not_found_type {};
+
+            template<typename U>
+            static auto test(U& u) -> decltype(swap(u, u));
+
+            template<typename U>
+            static auto test(...) -> swap_not_found_type;
+
+            using test_type = decltype(test<T>(std::declval<T&>()));
+
+        public:
+            static constexpr bool value = !std::is_same<test_type, swap_not_found_type>::value;
         };
 
-        // This really should be part of C++
+        template<bool, typename T>
+        struct is_nothrow_swappable_test :
+            std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))> {
+        };
+
         template<typename T>
-        struct is_nothrow_swappable
-            : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value> {
+        struct is_nothrow_swappable_test<false, T> :
+            std::false_type {
         };
 
-    } // namespace detail
+    } // namespace adl_swap_ns
+
+    template<typename T>
+    struct is_swappable :
+        std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {
+    };
+
+    // This really should be part of C++
+    template<typename T>
+    struct is_nothrow_swappable
+        : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value> {
+    };
+
+} // namespace detail
 } // namespace acm
 
 #endif // included_6603F051_ED25_4096_8DCF_0F4A5829CACD
