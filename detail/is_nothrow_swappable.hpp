@@ -43,13 +43,12 @@ namespace detail  {
 
         template<bool, typename T, typename U>
         struct is_nothrow_swappable_test :
-            std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<U&>()))> {
-        };
+            std::conditional<noexcept(swap(std::declval<T&>(), std::declval<U&>())),
+                             std::true_type, std::false_type>::type {};
 
         template<typename T, typename U>
         struct is_nothrow_swappable_test<false, T, U> :
-            std::false_type {
-        };
+            std::false_type {};
 
     } // namespace adl_swap_ns
 
@@ -57,11 +56,10 @@ namespace detail  {
     struct is_swappable :
         std::conditional<adl_swap_ns::is_swappable_test<T, U>::value,
                          std::true_type, std::false_type>::type {};
-
+    
     template<typename T, typename U = T>
     struct is_nothrow_swappable :
-        std::conditional<adl_swap_ns::is_nothrow_swappable_test<is_swappable<T, U>::value, T, U>::value,
-                         std::true_type, std::false_type>::type {};
+        adl_swap_ns::is_nothrow_swappable_test<is_swappable<T, U>::value, T, U> {};
 
 } // namespace detail
 } // namespace acm
