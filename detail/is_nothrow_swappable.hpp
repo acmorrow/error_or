@@ -24,44 +24,43 @@ namespace detail  {
     namespace adl_swap_ns {
         using std::swap;
 
-        template<typename T>
+        template<typename T, typename U>
         class is_swappable_test {
 
             struct swap_not_found_type {};
 
-            template<typename U>
-            static auto test(U& u) -> decltype(swap(u, u));
+            template<typename V1, typename V2>
+            static auto test(V1& v1, V2& v2) -> decltype(swap(v1, v2));
 
-            template<typename U>
+            template<typename V1, typename V2>
             static auto test(...) -> swap_not_found_type;
 
-            using test_type = decltype(test<T>(std::declval<T&>()));
+            using test_type = decltype(test<T, U>(std::declval<T&>(), std::declval<U&>()));
 
         public:
             static constexpr bool value = !std::is_same<test_type, swap_not_found_type>::value;
         };
 
-        template<bool, typename T>
+        template<bool, typename T, typename U>
         struct is_nothrow_swappable_test :
-            std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<T&>()))> {
+            std::integral_constant<bool, noexcept(swap(std::declval<T&>(), std::declval<U&>()))> {
         };
 
-        template<typename T>
-        struct is_nothrow_swappable_test<false, T> :
+        template<typename T, typename U>
+        struct is_nothrow_swappable_test<false, T, U> :
             std::false_type {
         };
 
     } // namespace adl_swap_ns
 
-    template<typename T>
+    template<typename T, typename U = T>
     struct is_swappable :
-        std::integral_constant<bool, adl_swap_ns::is_swappable_test<T>::value> {
+        std::integral_constant<bool, adl_swap_ns::is_swappable_test<T, U>::value> {
     };
 
-    // This really should be part of C++
-    template<typename T>
+    template<typename T, typename U = T>
     struct is_nothrow_swappable
-        : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T>::value, T>::value> {
+        : std::integral_constant<bool, adl_swap_ns::is_nothrow_swappable_test<is_swappable<T, U>::value, T, U>::value> {
     };
 
 } // namespace detail
