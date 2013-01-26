@@ -56,7 +56,7 @@ namespace detail  {
     struct is_swappable :
         std::conditional<adl_swap_ns::is_swappable_test<T, U>::value,
                          std::true_type, std::false_type>::type {};
-    
+
     template<typename T, typename U = T>
     struct is_nothrow_swappable :
         adl_swap_ns::is_nothrow_swappable_test<is_swappable<T, U>::value, T, U> {};
